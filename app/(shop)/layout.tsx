@@ -1,5 +1,6 @@
 import { Header } from '@/components/site/header'
 import { Footer } from '@/components/site/footer'
+import { WhatsAppConcierge } from '@/components/site/whatsapp-concierge'
 
 export default function ShopLayout({
   children,
@@ -9,6 +10,7 @@ export default function ShopLayout({
       <Header />
       <main className="min-h-[70vh]">{children}</main>
       <Footer />
+      <WhatsAppConcierge />
     </>
   )
 }

@@ -44,7 +44,7 @@ export async function getProducts(filters: ProductFilters = {}) {
 
     return filters.limit ? await query.limit(filters.limit) : await query
   } catch (error) {
-    console.error('Failed to get products:', error)
+    console.error('Failed to get products:', error instanceof Error ? error.message : error)
     return []
   }
 }
@@ -58,7 +58,7 @@ export async function getProductBySlug(slug: string) {
       .limit(1)
     return row ?? null
   } catch (error) {
-    console.error('Failed to get product by slug:', error)
+    console.error('Failed to get product by slug:', error instanceof Error ? error.message : error)
     return null
   }
 }

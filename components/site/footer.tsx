@@ -4,8 +4,8 @@ import { Logo } from '@/components/site/logo'
 export function Footer() {
   return (
     <footer className="mt-24 border-t border-border bg-card/40">
-      <div className="mx-auto grid max-w-7xl gap-12 px-4 py-16 md:grid-cols-4 md:px-8">
-        <div className="space-y-4 md:col-span-2">
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:grid-cols-2 md:grid-cols-4 md:px-8">
+        <div className="space-y-4">
           <Logo />
           <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
             Tas dan dompet kulit asli yang dirancang untuk keseharian mahasiswa:
@@ -29,11 +29,29 @@ export function Footer() {
             <li><Link className="hover:text-primary" href="/keranjang">Keranjang</Link></li>
           </ul>
         </div>
+        <div className="space-y-4">
+          <h3 className="eyebrow font-sans">Layanan &amp; Garansi</h3>
+          <ul className="space-y-2 text-sm text-muted-foreground">
+            <li><Link className="hover:text-primary" href="/perawatan">Panduan Perawatan Kulit</Link></li>
+            <li><Link className="hover:text-primary" href="/perawatan#garansi">Garansi 1 Tahun</Link></li>
+            <li><Link className="hover:text-primary" href="/perawatan#garansi">Kebijakan Retur 7 Hari</Link></li>
+            <li>
+              <a
+                href="https://wa.me/6281234567890?text=Halo%20Lex%20Leather%20Atelier,%20saya%20ingin%20konsultasi..."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-primary"
+              >
+                WhatsApp Concierge (Dummy)
+              </a>
+            </li>
+          </ul>
+        </div>
       </div>
       <div className="gold-rule" />
       <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-6 text-xs text-muted-foreground md:flex-row md:px-8">
         <p>&copy; 2026 Lex Leather Atelier. Seluruh hak cipta dilindungi.</p>
-        <p>Pembayaran aman: Transfer Bank, E-Wallet, QRIS</p>
+        <p>Pembayaran aman: Transfer Bank (BCA &amp; Mandiri), E-Wallet, QRIS</p>
       </div>
     </footer>
   )

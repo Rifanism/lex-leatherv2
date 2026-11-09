@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { ChevronRight, Gem, RotateCcw, ShieldCheck, Truck } from 'lucide-react'
+import { ChevronRight, Gem, MessageCircle, RotateCcw, ShieldCheck, Truck } from 'lucide-react'
 import { getProductBySlug, getRelatedProducts } from '@/lib/queries'
 import { categoryLabel, formatRupiah } from '@/lib/format'
 import { AddToCart } from '@/components/shop/add-to-cart'
@@ -70,13 +70,42 @@ export default async function ProductPage({ params }: { params: Params }) {
             </dl>
           )}
 
-          <AddToCart productId={product.id} stock={product.stock} />
+          <div className="space-y-3">
+            <AddToCart productId={product.id} stock={product.stock} />
+            <a
+              href={`https://wa.me/6281234567890?text=${encodeURIComponent(`Halo Lex Leather Atelier, saya ingin bertanya tentang produk "${product.name}" (${formatRupiah(product.price)})...`)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex h-12 w-full items-center justify-center gap-2 border border-border text-xs uppercase tracking-[0.22em] text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+            >
+              <MessageCircle className="size-4 text-primary" />
+              <span>Tanya Produk via WhatsApp</span>
+            </a>
+          </div>
 
           <ul className="grid gap-4 border-t border-border pt-6 text-sm text-muted-foreground sm:grid-cols-2">
-            <li className="flex items-center gap-3"><Gem className="size-4 text-primary" /> Kulit asli full-grain</li>
-            <li className="flex items-center gap-3"><ShieldCheck className="size-4 text-primary" /> Garansi 1 tahun</li>
-            <li className="flex items-center gap-3"><Truck className="size-4 text-primary" /> Dikirim dengan asuransi</li>
-            <li className="flex items-center gap-3"><RotateCcw className="size-4 text-primary" /> Retur 7 hari</li>
+            <li className="flex items-center gap-3">
+              <Gem className="size-4 text-primary" />
+              <Link href="/perawatan" className="transition-colors hover:text-primary">
+                Kulit asli full-grain
+              </Link>
+            </li>
+            <li className="flex items-center gap-3">
+              <ShieldCheck className="size-4 text-primary" />
+              <Link href="/perawatan#garansi" className="transition-colors hover:text-primary">
+                Garansi 1 tahun
+              </Link>
+            </li>
+            <li className="flex items-center gap-3">
+              <Truck className="size-4 text-primary" />
+              <span>Dikirim dengan asuransi</span>
+            </li>
+            <li className="flex items-center gap-3">
+              <RotateCcw className="size-4 text-primary" />
+              <Link href="/perawatan#garansi" className="transition-colors hover:text-primary">
+                Retur 7 hari
+              </Link>
+            </li>
           </ul>
         </div>
       </div>

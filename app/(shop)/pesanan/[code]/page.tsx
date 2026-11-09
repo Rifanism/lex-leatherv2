@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { ChevronLeft } from 'lucide-react'
+import { ChevronLeft, ExternalLink, Landmark, MessageCircle } from 'lucide-react'
 import { requireUser } from '@/lib/session'
 import { getOrderByCode } from '@/lib/queries'
 import { formatDateTime, formatRupiah, paymentLabel } from '@/lib/format'
@@ -9,6 +9,7 @@ import { PayButton } from '@/components/shop/pay-button'
 import { ConfirmReceived } from '@/components/shop/confirm-received'
 import { ProductImage } from '@/components/shop/product-image'
 import { StatusBadge } from '@/components/shop/status-badge'
+import { CopyButton } from '@/components/shop/copy-button'
 
 export const metadata: Metadata = { title: 'Detail Pesanan' }
 
@@ -71,16 +72,88 @@ export default async function OrderDetailPage({ params, searchParams }: Props) {
               <p className="text-sm text-muted-foreground">{order.phone}</p>
               <p className="text-sm leading-relaxed">{order.address}</p>
             </div>
-            <div className="space-y-2 border border-border p-5">
+            <div className="space-y-3 border border-border p-5">
               <p className="eyebrow">Pembayaran &amp; Pengiriman</p>
               <p className="text-sm">
                 Metode: <span className="text-primary">{paymentLabel(order.paymentType)}</span>
               </p>
               <p className="text-sm">Dibayar: {formatDateTime(order.paidAt)}</p>
-              <p className="text-sm">No. resi: {order.trackingNumber || '-'}</p>
+              <div className="text-sm">
+                <span className="text-muted-foreground">No. resi: </span>
+                {order.trackingNumber ? (
+                  <div className="mt-1 flex flex-wrap items-center gap-2">
+                    <span className="font-mono font-medium text-foreground">{order.trackingNumber}</span>
+                    <CopyButton text={order.trackingNumber} label="Salin" />
+                    <a
+                      href={`https://cekresi.com/?noresi=${encodeURIComponent(order.trackingNumber)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 border border-border px-2 py-1 text-[0.68rem] uppercase tracking-wider text-primary transition-colors hover:border-primary"
+                    >
+                      <span>Lacak Paket</span>
+                      <ExternalLink className="size-3" />
+                    </a>
+                  </div>
+                ) : (
+                  <span>-</span>
+                )}
+              </div>
               {order.note && <p className="text-sm text-muted-foreground">Catatan: {order.note}</p>}
             </div>
           </div>
+
+          {order.status === 'pending' && (
+            <div className="space-y-5 border border-primary/40 bg-card/60 p-6">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-primary">
+                  <Landmark className="size-4" />
+                  <span>Instruksi Transfer Bank (Simulasi)</span>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Silakan transfer tepat sesuai nominal tagihan ke rekening atelier kami:
+                </p>
+              </div>
+
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div className="flex flex-col justify-between border border-border bg-background/50 p-4">
+                  <div className="space-y-1">
+                    <p className="text-[0.68rem] uppercase tracking-widest text-muted-foreground">Bank BCA</p>
+                    <p className="font-mono text-base font-semibold tracking-wider text-foreground">8830-1234-5678</p>
+                    <p className="text-xs text-muted-foreground">a.n. PT Lex Leather Atelier</p>
+                  </div>
+                  <div className="mt-3">
+                    <CopyButton text="883012345678" label="Salin BCA" />
+                  </div>
+                </div>
+
+                <div className="flex flex-col justify-between border border-border bg-background/50 p-4">
+                  <div className="space-y-1">
+                    <p className="text-[0.68rem] uppercase tracking-widest text-muted-foreground">Bank Mandiri</p>
+                    <p className="font-mono text-base font-semibold tracking-wider text-foreground">137-00-1234567-8</p>
+                    <p className="text-xs text-muted-foreground">a.n. PT Lex Leather Atelier</p>
+                  </div>
+                  <div className="mt-3">
+                    <CopyButton text="1370012345678" label="Salin Mandiri" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
+                <div className="text-xs text-muted-foreground">
+                  Total Tagihan: <span className="font-serif text-base text-primary">{formatRupiah(order.total)}</span>
+                </div>
+                <a
+                  href={`https://wa.me/6281234567890?text=${encodeURIComponent(`Halo Lex Leather Atelier, saya ingin konfirmasi pembayaran untuk pesanan ${order.code} sebesar ${formatRupiah(order.total)} atas nama ${order.recipientName}. [Simulasi Bukti Transfer]`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 border border-primary/50 bg-primary/10 px-4 py-2 text-xs uppercase tracking-wider text-primary transition-colors hover:border-primary hover:bg-primary/20"
+                >
+                  <MessageCircle className="size-3.5" />
+                  <span>Konfirmasi via WhatsApp (Simulasi)</span>
+                </a>
+              </div>
+            </div>
+          )}
         </div>
 
         <aside className="h-fit space-y-5 border border-border bg-card/60 p-6">
