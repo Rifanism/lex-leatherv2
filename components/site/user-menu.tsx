@@ -31,9 +31,12 @@ export function UserMenu({ user }: Props) {
   }
 
   async function handleSignOut() {
-    await signOut()
-    router.push('/')
-    router.refresh()
+    try {
+      await signOut()
+    } catch (err) {
+      console.error('Gagal keluar:', err)
+    }
+    window.location.href = '/'
   }
 
   return (
@@ -62,7 +65,11 @@ export function UserMenu({ user }: Props) {
           <Package className="size-4" /> Pesanan Saya
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onSelect={handleSignOut}>
+        <DropdownMenuItem
+          onClick={handleSignOut}
+          onSelect={handleSignOut}
+          className="cursor-pointer"
+        >
           <LogOut className="size-4" /> Keluar
         </DropdownMenuItem>
       </DropdownMenuContent>

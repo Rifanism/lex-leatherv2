@@ -11,9 +11,12 @@ export function AdminSignOut() {
     <button
       type="button"
       onClick={async () => {
-        await authClient.signOut()
-        router.push('/masuk')
-        router.refresh()
+        try {
+          await authClient.signOut()
+        } catch (err) {
+          console.error('Gagal keluar:', err)
+        }
+        window.location.href = '/masuk'
       }}
       className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-muted-foreground transition-colors hover:text-primary"
     >
