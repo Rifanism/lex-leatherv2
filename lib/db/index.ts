@@ -8,10 +8,16 @@ const isProduction = process.env.NODE_ENV === 'production'
 const connectionString = process.env.DATABASE_URL || process.env.POSTGRES_URL
 const useSSL = isProduction || connectionString?.includes('sslmode=require')
 
+if (isProduction && !connectionString) {
+  console.error(
+    '⚠️ [Lex Leather DB] DATABASE_URL atau POSTGRES_URL belum disetel di Vercel Environment Variables!',
+  )
+}
+
 export const pool =
   globalForPool.__pgPool ??
   new Pool({
-    connectionString,
+    connectionString: connectionString || undefined,
     max: isProduction ? 10 : 5,
     ssl: useSSL ? { rejectUnauthorized: false } : undefined,
   })

@@ -12,8 +12,21 @@ export type SessionUser = {
 }
 
 export const getSessionUser = cache(async (): Promise<SessionUser | null> => {
-  const session = await auth.api.getSession({ headers: await headers() })
-  return (session?.user as SessionUser | undefined) ?? null
+  try {
+    const session = await auth.api.getSession({ headers: await headers() })
+    return (session?.user as SessionUser | undefined) ?? null
+  } catch (error) {
+    if (
+      typeof error === 'object' &&
+      error !== null &&
+      'digest' in error &&
+      (error as { digest?: string }).digest === 'DYNAMIC_SERVER_USAGE'
+    ) {
+      throw error
+    }
+    console.error('Failed to get session user:', error)
+    return null
+  }
 })
 
 export async function requireUser(): Promise<SessionUser> {
