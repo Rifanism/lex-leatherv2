@@ -1,6 +1,7 @@
 import { db } from './index.ts'
-import { products } from './schema.ts'
+import { products, user } from './schema.ts'
 import { eq } from 'drizzle-orm'
+import { auth } from '../auth.ts'
 
 export const sampleProducts = [
   {
@@ -127,7 +128,68 @@ export async function seed() {
     }
   }
 
-  console.log('✅ Seeding selesai dengan sukses!')
+  console.log('\n👤 Memulai proses seeding akun pengguna & admin...')
+
+  // 1. Akun Admin
+  const adminEmail = 'admin@gmail.com'
+  const existingAdmin = await db
+    .select({ id: user.id })
+    .from(user)
+    .where(eq(user.email, adminEmail))
+    .limit(1)
+
+  if (existingAdmin.length === 0) {
+    try {
+      await auth.api.signUpEmail({
+        body: {
+          name: 'Admin Lex Leather',
+          email: adminEmail,
+          password: 'password123',
+        },
+      })
+      await db
+        .update(user)
+        .set({ role: 'admin' })
+        .where(eq(user.email, adminEmail))
+      console.log(`  ✓ Akun Admin berhasil dibuat: ${adminEmail} (password: password123)`)
+    } catch (e) {
+      console.error(`  ✕ Gagal membuat akun admin:`, e)
+    }
+  } else {
+    // Pastikan role tetap admin
+    await db
+      .update(user)
+      .set({ role: 'admin' })
+      .where(eq(user.email, adminEmail))
+    console.log(`  - Akun Admin sudah ada: ${adminEmail} (role dipastikan admin)`)
+  }
+
+  // 2. Akun Customer Demo
+  const customerEmail = 'aji@gmail.com'
+  const existingCustomer = await db
+    .select({ id: user.id })
+    .from(user)
+    .where(eq(user.email, customerEmail))
+    .limit(1)
+
+  if (existingCustomer.length === 0) {
+    try {
+      await auth.api.signUpEmail({
+        body: {
+          name: 'Aji Lele',
+          email: customerEmail,
+          password: 'password123',
+        },
+      })
+      console.log(`  ✓ Akun Customer berhasil dibuat: ${customerEmail} (password: password123)`)
+    } catch (e) {
+      console.error(`  ✕ Gagal membuat akun customer:`, e)
+    }
+  } else {
+    console.log(`  - Akun Customer sudah ada: ${customerEmail}`)
+  }
+
+  console.log('\n✅ Seeding produk dan akun selesai dengan sukses!')
   process.exit(0)
 }
 
