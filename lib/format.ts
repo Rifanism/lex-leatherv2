@@ -11,22 +11,34 @@ export function formatRupiah(value: number) {
 
 export function formatDate(value: Date | string | null | undefined) {
   if (!value) return '-'
-  return new Intl.DateTimeFormat('id-ID', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  }).format(new Date(value))
+  try {
+    const d = new Date(value)
+    if (Number.isNaN(d.getTime())) return '-'
+    return new Intl.DateTimeFormat('id-ID', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    }).format(d)
+  } catch {
+    return '-'
+  }
 }
 
 export function formatDateTime(value: Date | string | null | undefined) {
   if (!value) return '-'
-  return new Intl.DateTimeFormat('id-ID', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format(new Date(value))
+  try {
+    const d = new Date(value)
+    if (Number.isNaN(d.getTime())) return '-'
+    return new Intl.DateTimeFormat('id-ID', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    }).format(d)
+  } catch {
+    return '-'
+  }
 }
 
 export function shippingFor(subtotal: number) {

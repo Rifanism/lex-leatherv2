@@ -20,6 +20,8 @@ export const pool =
     connectionString: connectionString || undefined,
     max: isProduction ? 10 : 5,
     ssl: useSSL ? { rejectUnauthorized: false } : undefined,
+    connectionTimeoutMillis: 5000,
+    idleTimeoutMillis: 30000,
   })
 
 if (!isProduction) globalForPool.__pgPool = pool

@@ -1,5 +1,5 @@
 import { and, asc, count, desc, eq, ilike, inArray, or, sql } from 'drizzle-orm'
-import { db } from '@/lib/db'
+import { db } from './db/index.ts'
 import {
   addresses,
   cartItems,
@@ -7,7 +7,7 @@ import {
   orders,
   products,
   user,
-} from '@/lib/db/schema'
+} from './db/schema.ts'
 
 export type ProductFilters = {
   category?: string
@@ -105,38 +105,58 @@ export async function getCartCount(userId: string) {
 }
 
 export async function getAddresses(userId: string) {
-  return db
-    .select()
-    .from(addresses)
-    .where(eq(addresses.userId, userId))
-    .orderBy(desc(addresses.isDefault), desc(addresses.createdAt))
+  try {
+    return await db
+      .select()
+      .from(addresses)
+      .where(eq(addresses.userId, userId))
+      .orderBy(desc(addresses.isDefault), desc(addresses.createdAt))
+  } catch (error) {
+    console.error('Failed to get addresses:', error)
+    return []
+  }
 }
 
 export async function getUserOrders(userId: string) {
-  return db
-    .select()
-    .from(orders)
-    .where(eq(orders.userId, userId))
-    .orderBy(desc(orders.createdAt))
+  try {
+    return await db
+      .select()
+      .from(orders)
+      .where(eq(orders.userId, userId))
+      .orderBy(desc(orders.createdAt))
+  } catch (error) {
+    console.error('Failed to get user orders:', error)
+    return []
+  }
 }
 
 export async function getOrderByCode(code: string) {
-  const [order] = await db
-    .select()
-    .from(orders)
-    .where(eq(orders.code, code))
-    .limit(1)
-  if (!order) return null
-  const items = await db
-    .select()
-    .from(orderItems)
-    .where(eq(orderItems.orderId, order.id))
-  return { order, items }
+  try {
+    const [order] = await db
+      .select()
+      .from(orders)
+      .where(eq(orders.code, code))
+      .limit(1)
+    if (!order) return null
+    const items = await db
+      .select()
+      .from(orderItems)
+      .where(eq(orderItems.orderId, order.id))
+    return { order, items }
+  } catch (error) {
+    console.error('Failed to get order by code:', error)
+    return null
+  }
 }
 
 export async function getOrderItemPreviews(orderIds: number[]) {
   if (orderIds.length === 0) return []
-  return db.select().from(orderItems).where(inArray(orderItems.orderId, orderIds))
+  try {
+    return await db.select().from(orderItems).where(inArray(orderItems.orderId, orderIds))
+  } catch (error) {
+    console.error('Failed to get order item previews:', error)
+    return []
+  }
 }
 
 const REVENUE_STATUSES = ['paid', 'processing', 'shipped', 'completed']
@@ -226,45 +246,65 @@ export async function getAdminStats() {
 }
 
 export async function getAllOrders(status?: string) {
-  const query = db
-    .select({
-      order: orders,
-      customerName: user.name,
-      customerEmail: user.email,
-    })
-    .from(orders)
-    .leftJoin(user, eq(orders.userId, user.id))
-    .orderBy(desc(orders.createdAt))
-  return status && status !== 'all'
-    ? query.where(eq(orders.status, status))
-    : query
+  try {
+    const query = db
+      .select({
+        order: orders,
+        customerName: user.name,
+        customerEmail: user.email,
+      })
+      .from(orders)
+      .leftJoin(user, eq(orders.userId, user.id))
+      .orderBy(desc(orders.createdAt))
+    return status && status !== 'all'
+      ? await query.where(eq(orders.status, status))
+      : await query
+  } catch (error) {
+    console.error('Failed to get all orders:', error)
+    return []
+  }
 }
 
 export async function getAllProducts() {
-  return db.select().from(products).orderBy(desc(products.createdAt))
+  try {
+    return await db.select().from(products).orderBy(desc(products.createdAt))
+  } catch (error) {
+    console.error('Failed to get all products:', error)
+    return []
+  }
 }
 
 export async function getProductById(id: number) {
-  const [row] = await db
-    .select()
-    .from(products)
-    .where(eq(products.id, id))
-    .limit(1)
-  return row ?? null
+  try {
+    const [row] = await db
+      .select()
+      .from(products)
+      .where(eq(products.id, id))
+      .limit(1)
+    return row ?? null
+  } catch (error) {
+    console.error('Failed to get product by id:', error)
+    return null
+  }
 }
 
 export async function getCustomers() {
-  return db
-    .select({
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      phone: user.phone,
-      createdAt: user.createdAt,
-      orderCount: sql<number>`(select count(*) from ${orders} where ${orders.userId} = ${user.id})::int`,
-      totalSpent: sql<number>`coalesce((select sum(${orders.total}) from ${orders} where ${orders.userId} = ${user.id} and ${orders.status} in ('paid','processing','shipped','completed')), 0)::int`,
-    })
-    .from(user)
-    .where(eq(user.role, 'customer'))
-    .orderBy(desc(user.createdAt))
+  try {
+    return await db
+      .select({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        createdAt: user.createdAt,
+        orderCount: sql<number>`(select count(*) from ${orders} where ${orders.userId} = "user"."id")::int`,
+        totalSpent: sql<number>`coalesce((select sum(${orders.total}) from ${orders} where ${orders.userId} = "user"."id" and ${orders.status} in ('paid','processing','shipped','completed')), 0)::int`,
+      })
+      .from(user)
+      .where(eq(user.role, 'customer'))
+      .orderBy(desc(user.createdAt))
+  } catch (error) {
+    console.error('Failed to get customers:', error)
+    return []
+  }
 }
