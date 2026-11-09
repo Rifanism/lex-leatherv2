@@ -1,0 +1,65 @@
+<svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="lexGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FDF3D6" />
+      <stop offset="25%" stop-color="#E5C178" />
+      <stop offset="60%" stop-color="#C59B3F" />
+      <stop offset="90%" stop-color="#936D1F" />
+      <stop offset="100%" stop-color="#6F4E0E" />
+    </linearGradient>
+    <linearGradient id="lexBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1A1714" />
+      <stop offset="100%" stop-color="#0E0C0A" />
+    </linearGradient>
+  </defs>
+
+  <!-- Luxury Squircle Badge -->
+  <rect x="5" y="5" width="170" height="170" rx="42" fill="url(#lexBg)" stroke="url(#lexGold)" stroke-width="2.5" />
+
+  <!-- Artisan Saddle Stitch Rim -->
+  <rect x="14" y="14" width="152" height="152" rx="34" fill="none" stroke="url(#lexGold)" stroke-width="1.2" stroke-dasharray="4.5 3.5" stroke-opacity="0.55" />
+
+  <!-- Inner Hairline Frame -->
+  <rect x="23" y="23" width="134" height="134" rx="27" fill="none" stroke="url(#lexGold)" stroke-width="0.75" stroke-opacity="0.3" />
+
+  <!-- Top Atelier Diamond Crest Star -->
+  <polygon points="90,34 93.5,41.5 101,45 93.5,48.5 90,56 86.5,48.5 79,45 86.5,41.5" fill="url(#lexGold)" />
+  <circle cx="70" cy="45" r="1.5" fill="url(#lexGold)" opacity="0.7" />
+  <circle cx="110" cy="45" r="1.5" fill="url(#lexGold)" opacity="0.7" />
+
+  <!-- Grand Serif Monogram "L" -->
+  <path d="M 68 62 
+           H 92 
+           V 67 
+           H 84 
+           C 81 67 80 68 80 72 
+           V 116 
+           C 80 120 81 121 85 121 
+           H 106 
+           C 114 121 117.5 118 119 112 
+           H 123 
+           L 121 126 
+           H 65 
+           V 121 
+           H 71 
+           C 74 121 75 120 75 116 
+           V 72 
+           C 75 68 74 67 71 67 
+           H 68 
+           Z" 
+        fill="url(#lexGold)" />
+
+  <!-- Elegant Intersecting Accent (Artisan Monogram Echo) -->
+  <path d="M 94 78 
+           L 122 106 
+           C 124 108 126.5 109 129 109 
+           V 105 
+           L 102 78 
+           Z" 
+        fill="url(#lexGold)" opacity="0.75" />
+
+  <!-- Bottom Atelier Rule with Center Gem -->
+  <line x1="64" y1="142" x2="84" y2="142" stroke="url(#lexGold)" stroke-width="1" opacity="0.5" />
+  <polygon points="90,139.5 92.5,142 90,144.5 87.5,142" fill="url(#lexGold)" />
+  <line x1="96" y1="142" x2="116" y2="142" stroke="url(#lexGold)" stroke-width="1" opacity="0.5" />
+</svg>

@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import { Menu } from 'lucide-react'
+import { Logo } from '@/components/site/logo'
 import {
   Sheet,
   SheetContent,
@@ -27,10 +28,9 @@ export function MobileNav({
         <Menu className="size-5" strokeWidth={1.4} />
       </SheetTrigger>
       <SheetContent side="left" className="w-72 border-border bg-background">
-        <SheetHeader>
-          <SheetTitle className="font-serif text-xl tracking-[0.3em]">
-            LEX LEATHER
-          </SheetTitle>
+        <SheetHeader className="pb-2">
+          <SheetTitle className="sr-only">Navigasi Lex Leather Atelier</SheetTitle>
+          <Logo onClick={() => setOpen(false)} />
         </SheetHeader>
         <nav className="flex flex-col gap-1 px-4">
           {links.map((link) => (
